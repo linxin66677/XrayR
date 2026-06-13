@@ -34,19 +34,32 @@ check_release() {
 }
 
 check_arch() {
-    arch="$(uname -m)"
+    raw_arch="$(uname -m)"
 
-    case "$arch" in
+    case "$raw_arch" in
         x86_64|amd64)
             arch="64"
             ;;
+        aarch64|arm64)
+            arch="arm64-v8a"
+            ;;
+        armv7l|armv7)
+            arch="arm32-v7a"
+            ;;
+        armv6l|armv6)
+            arch="arm32-v6"
+            ;;
+        i386|i686)
+            arch="32"
+            ;;
         *)
-            echo -e "${red}当前脚本仓库只内置 XrayR-linux-64.zip，暂不支持该架构：$(uname -m)${plain}"
+            echo -e "${red}暂不支持该架构：${raw_arch}${plain}"
+            echo -e "${yellow}请确认仓库是否存在对应文件，例如：XrayR-linux-${raw_arch}.zip${plain}"
             exit 1
             ;;
     esac
 
-    echo -e "检测架构：${green}${arch}${plain}"
+    echo -e "检测架构：${green}${raw_arch}${plain} -> 使用文件：${green}XrayR-linux-${arch}.zip${plain}"
 }
 
 install_base() {
